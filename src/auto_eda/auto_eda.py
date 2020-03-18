@@ -3,6 +3,7 @@ import numpy as np
 import sys
 import os
 # import modin.pandas as pd
+pd.options.display.max_columns = None # show all columns    
 
 
 # os.environ["MODIN_ENGINE"] = "ray"  # Modin will use Ray
@@ -99,5 +100,4 @@ if __name__ == '__main__':
     #     df = pd.read_excel(DATA_PATH)
     # except:
     df = pd.read_csv(DATA_PATH)
-    pd.options.display.max_columns = df.shape[1] # show all columns    
     eda(df)
