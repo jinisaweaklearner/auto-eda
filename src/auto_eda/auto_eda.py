@@ -92,12 +92,11 @@ def eda(df):
     # correlation and outliers
     # print('\n======= correlation between features =======')
 
-
-
 if __name__ == '__main__':
     DATA_PATH = sys.argv[1]
     # try:
     #     df = pd.read_excel(DATA_PATH)
     # except:
     df = pd.read_csv(DATA_PATH)
+       
     eda(df)
