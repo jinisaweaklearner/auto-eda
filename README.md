@@ -1,3 +1,3 @@
 # auto_eda
 
-It is an automatic script that plot the information in the dataset.
+It is an automatic script that generating information in the dataset.
