@@ -1,5 +1,6 @@
 .idea/
-*.csv
 build
 dist
 auto_eda.egg-info
+report.txt
+*.csv

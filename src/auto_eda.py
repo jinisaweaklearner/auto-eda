@@ -3,22 +3,38 @@ import numpy as np
 import sys
 import os
 import argparse
+import pathlib
 pd.options.display.max_columns = None  # show all columns
 # import modin.pandas as pd
-# os.environ["MODIN_ENGINE"] = "ray"  # Modin will use Ray
 
 
-def main(file_name):
+def main():
     parser = argparse.ArgumentParser(prog='auto-eda',
-                                     description='Welcome to autoeda package.')
-    parser.add_argument('file_name', type=argparse.FileType(
-        'r'), help="csv file names")
+                                     usage='%(prog)s [options] path',
+                                     description='Welcome to the auto-eda package.',
+                                     epilog='If you have any advice or questions, feel free to email me xiaochengjin.random@gmail.com')
+    parser.add_argument(
+        dest="file", type=argparse.FileType("r"), help="file names")
+    parser.add_argument(dest='num_sample', type=int, help="number of samples")
+
     args = parser.parse_args()
-    df = pd.read_csv(args.file_name)
-    eda(df)
+    args.file.close()
+    print(f'Get file: {args.file.name}')
+
+    df = pd.read_csv(args.file.name)
+
+    print(f'{df.shape[0]} rows and {df.shape[1]} columns in the data frame')
+
+    if args.num_sample > 0 and args.num_sample < 1000000:
+        eda(df, args.num_sample)
+    else:
+        raise ValueError(
+            "the number of samples should be from 0 to 1000000 \n"
+            "e.g. auto-eda file_name.csv 1000 \n"
+        )
 
 
-def eda(df):
+def eda(df, num_sample):
     '''
     the function below is a general EDA of a dataset
     to know about details about the dataset and visualize some information, we can dive deep in jupyter lab
@@ -27,7 +43,7 @@ def eda(df):
     @df: DataFrame
     '''
 
-    df = df.sample(n=10000)
+    df = df.sample(n=num_sample, random_state=42)
 
     # head of dataset
     print('======= head of data =======')
@@ -103,7 +119,4 @@ def eda(df):
 
 
 if __name__ == '__main__':
-    path = sys.argv[1]
-    # df = pd.read_csv(DATA_PATH)
-    # eda(df)
-    main(path)
+    main()

@@ -1,0 +1,11 @@
+README.md
+setup.py
+auto_eda.egg-info/PKG-INFO
+auto_eda.egg-info/SOURCES.txt
+auto_eda.egg-info/dependency_links.txt
+auto_eda.egg-info/entry_points.txt
+auto_eda.egg-info/not-zip-safe
+auto_eda.egg-info/requires.txt
+auto_eda.egg-info/top_level.txt
+src/__init__.py
+src/auto_eda.py
