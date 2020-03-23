@@ -1,6 +1,7 @@
-.idea/
+.*
+*.ipynb
+auto_eda.egg-info
 build
 dist
-auto_eda.egg-info
 report.txt
 *.csv

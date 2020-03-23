@@ -1,4 +1,4 @@
-# auto_eda
+# auto-eda
 
 [![PyPI version](https://badge.fury.io/py/auto-eda.svg)](https://badge.fury.io/py/auto-eda)
 

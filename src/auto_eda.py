@@ -4,29 +4,52 @@ import sys
 import os
 import argparse
 import pathlib
+
 pd.options.display.max_columns = None  # show all columns
 # import modin.pandas as pd
 
 
+long_desc = '''
+            Welcome to the auto-eda package.
+            It can help you to auto scan the dataset
+            1. head of dataset
+            2. tail of dataset 
+            3. shape of dataset
+            4. number of missing values 
+            5. number of duplicated rows
+            6. data type 
+            7. descriptive statistics 
+            8. number of unique values 
+            9. unique identifies 
+            10. relative frequency (precentage) of unique values or bins of numerical features
+            11. unique values for each feature
+            12. top absolute correlation among features 
+            '''
+
+
 def main():
     parser = argparse.ArgumentParser(prog='auto-eda',
-                                     usage='%(prog)s [options] path',
-                                     description='Welcome to the auto-eda package.',
+                                     usage='%(prog)s file_name num_sample[option]',
+                                     description=long_desc,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter,
                                      epilog='If you have any advice or questions, feel free to email me xiaochengjin.random@gmail.com')
     parser.add_argument(
         dest="file", type=argparse.FileType("r"), help="file names")
-    parser.add_argument(dest='num_sample', type=int, help="number of samples")
+    parser.add_argument(dest='num_sample', type=int,
+                        help="number of samples")  # TODO: default value is all?
 
     args = parser.parse_args()
     args.file.close()
     print(f'Get file: {args.file.name}')
+    print(args)
 
     df = pd.read_csv(args.file.name)
 
     print(f'{df.shape[0]} rows and {df.shape[1]} columns in the data frame')
 
     if args.num_sample > 0 and args.num_sample < 1000000:
-        eda(df, args.num_sample)
+        # if num_sample > num of rows
+        eda(df, min(args.num_sample, df.shape[0]))
     else:
         raise ValueError(
             "the number of samples should be from 0 to 1000000 \n"
@@ -106,17 +129,33 @@ def eda(df, num_sample):
     print('\n======= unique values for each feature =======')
     for col in df.columns:
         if df[col].dtypes.name == 'object' or df[col].dtypes.name == 'category':
-            if df[col].nunique() < 3000:
+            if df[col].nunique() < 100:
                 print('column name:', col)
                 print(df[col].unique())
                 print('-----------------------------')
             else:
-                print('unique values are over 3000...')
+                print(f'over 100 unique values in {col}...')
 
-    # TODO: update the cor function
-    # correlation and outliers
-    # print('\n======= correlation between features =======')
+    # correlation
+    print('\n======= absolute correlation among features =======')
+    corr_matrix = df.corr().abs()
 
+    # the matrix is symmetric so we need to extract upper triangle matrix without diagonal (k = 1)
+    sol = (corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(np.bool))
+           .stack()
+           .sort_values(ascending=False))
+    # first element of sol series is the pair with the bigest correlatio
+    df_corr = sol.reset_index()
+    df_corr.columns = ['feat_1', 'feat_2', 'corr']
+    print('Top correlated features')
+    print(df_corr)
+
+    # TODO: outlier detection
+    # https://github.com/jinisaweaklearner/auto-eda/blob/master/requirements.txt
+
+    # TODO: more vis
+    # TODO: auto highlight sth
+    # TODO: auto insights?
 
 if __name__ == '__main__':
     main()
