@@ -1,6 +1,5 @@
 .*
 *.ipynb
-auto_eda.egg-info
 build
 dist
 report.txt

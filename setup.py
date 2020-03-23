@@ -7,7 +7,7 @@ long_description = 'It is an automatic script that generating information in the
 
 setup(
     name='auto-eda',
-    version='0.1.8',
+    version='0.1.9',
     author='Jin Xiaocheng',
     author_email='xiaochengjin.random@gmail.com',
     url='https://github.com/jinisaweaklearner/auto-eda',
